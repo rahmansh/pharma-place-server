@@ -43,6 +43,56 @@ async function run() {
             res.send(result);
         })
 
+        app.get("/carts", async (req, res) => {
+            const { email, medicineName } = req.query;
+
+            if (!email || !medicineName) {
+                return res.status(400).send({ error: "Email and medicineName are required." })
+            }
+
+            const query = {
+                email: email,
+                name: medicineName,
+            }
+
+            try {
+                const result = await cartCollection.find(query).toArray();
+                res.send(result);
+            } catch (error) {
+                console.error("Error fetching cart items: ", error);
+                res.status(500).send({ error: "An error occured while fetching the cart items." });
+            }
+
+        })
+
+        app.patch("/carts/:id", async (req, res) => {
+            const id = req.params.id;
+            const { orderQuantity } = req.body;
+
+            if (!orderQuantity || orderQuantity < 1) {
+                return res.status(400).send({ error: "Invalid order quantity." });
+            }
+
+            const query = { _id: new ObjectId(id) };
+            const update = {
+                $set: {
+                    orderQuantity: orderQuantity,
+                }
+            }
+
+            try {
+                const result = await cartCollection.updateOne(query, update);
+                if (result.modifiedCount === 1) {
+                    res.send({ success: true, message: "Order quantity updated successfully." })
+                } else {
+                    res.status(404).send({ error: "Cart item not found or already updated." })
+                }
+            } catch (error) {
+                console.error("Error updating cart: ", error);
+                res.status(500).send({ error: "An error occured while updating the cart." })
+            }
+        })
+
         app.post("/carts", async (req, res) => {
             const cartItem = req.body;
             const result = await cartCollection.insertOne(cartItem);
