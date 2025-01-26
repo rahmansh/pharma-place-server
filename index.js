@@ -25,6 +25,7 @@ async function run() {
         // await client.connect();
 
         const categoriesCollection = client.db("PharmaPlace").collection("categories");
+        const medicineCollection = client.db("PharmaPlace").collection("medicines");
         const cartCollection = client.db("PharmaPlace").collection("carts");
 
         // pharma place categories
@@ -35,13 +36,13 @@ async function run() {
         })
 
         // pharma place medicine details
-        // single equipment details
-        app.get("/category/:id", async (req, res) => {
-            const id = req.params.id;
-            const query = { _id: new ObjectId(id) };
-            const result = await categoriesCollection.findOne(query);
+        app.get("/medicines", async (req, res) => {
+            const cursor = medicineCollection.find();
+            const result = await cursor.toArray();
             res.send(result);
         })
+
+
 
         // carts collection
         app.get('/cartItems', async (req, res) => {
@@ -62,6 +63,7 @@ async function run() {
         app.get("/carts", async (req, res) => {
             const { email, medicineName } = req.query;
 
+
             if (!email || !medicineName) {
                 return res.status(400).send({ error: "Email and medicineName are required." })
             }
@@ -80,6 +82,7 @@ async function run() {
             }
 
         })
+
 
         app.patch("/carts/:id", async (req, res) => {
             const id = req.params.id;
