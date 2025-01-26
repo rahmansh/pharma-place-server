@@ -118,6 +118,23 @@ async function run() {
             res.send(result);
         })
 
+        app.delete("/carts", async (req, res) => {
+            const email = req.query.email;
+
+            if (!email) {
+                return res.status(400).send({ error: "Email is required." });
+            }
+
+            try {
+                const query = { email: email };
+                const result = await cartCollection.deleteMany(query);
+                res.send({ success: true, deleteCount: result.deletedCount });
+            } catch (error) {
+                console.error("Error clearing cart: ", error);
+                res.status(500).send({ error: "An error occured while clearing the cart." })
+            }
+        })
+
 
 
 
