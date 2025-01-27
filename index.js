@@ -25,8 +25,24 @@ async function run() {
         // await client.connect();
 
         const categoriesCollection = client.db("PharmaPlace").collection("categories");
+        const userCollection = client.db("PharmaPlace").collection("users");
         const medicineCollection = client.db("PharmaPlace").collection("medicines");
         const cartCollection = client.db("PharmaPlace").collection("carts");
+
+
+        // insert user data for the first time
+        app.post("/users", async (req, res) => {
+            const user = req.body;
+            const query = { email: user.email }
+            const existingUser = await userCollection.findOne(query);
+
+            if (existingUser) {
+                return res.send({ message: `User already exists: InsertedId: ${null}` })
+            }
+
+            const result = await userCollection.insertOne(user);
+            res.send(result)
+        })
 
         // pharma place categories
         app.get("/categories", async (req, res) => {
