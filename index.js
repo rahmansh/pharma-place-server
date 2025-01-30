@@ -51,6 +51,49 @@ async function run() {
             res.send(result)
         })
 
+        // user role
+        app.patch("/users/admin/:id", async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const updateDoc = {
+                $set: {
+                    role: 'Admin'
+                }
+            }
+
+            const result = await userCollection.updateOne(filter, updateDoc);
+            res.send(result);
+        })
+
+        app.patch("/users/seller/:id", async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const updateDoc = {
+                $set: {
+                    role: 'Seller'
+                }
+            }
+
+            const result = await userCollection.updateOne(filter, updateDoc);
+            res.send(result);
+        })
+
+        app.patch("/user/:id", async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const updateDoc = {
+                $set: {
+                    role: 'User'
+                }
+            }
+
+            const result = await userCollection.updateOne(filter, updateDoc);
+            res.send(result);
+        })
+
+
+
+
 
 
         // insert user data for the first time
