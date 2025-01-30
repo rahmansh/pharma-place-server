@@ -1,5 +1,6 @@
 require('dotenv').config()
 const express = require('express');
+const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const app = express();
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
@@ -28,6 +29,21 @@ async function run() {
         const userCollection = client.db("PharmaPlace").collection("users");
         const medicineCollection = client.db("PharmaPlace").collection("medicines");
         const cartCollection = client.db("PharmaPlace").collection("carts");
+
+
+        // jwt related api
+        app.post("/jwt", async (req, res) => {
+            const user = req.body;
+
+            const token = jwt.sign(
+                user,
+                process.env.ACCESS_TOKEN_SECRET,
+                { expiresIn: '1h' }
+            )
+
+            res.send({ token })
+        })
+
 
 
         // insert user data for the first time
