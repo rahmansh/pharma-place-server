@@ -44,6 +44,13 @@ async function run() {
             res.send({ token })
         })
 
+        // get all the users
+        app.get('/users', async (req, res) => {
+            const cursor = userCollection.find();
+            const result = await cursor.toArray();
+            res.send(result)
+        })
+
 
 
         // insert user data for the first time
