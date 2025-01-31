@@ -71,9 +71,9 @@ async function run() {
 
             const query = { email: email };
             const user = await userCollection.findOne(query);
-            let admin = false;
+            let admin;
             if (user) {
-                admin = user.role === 'Admin'
+                admin = user.role;
             }
 
             res.send({ admin })
