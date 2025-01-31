@@ -62,6 +62,23 @@ async function run() {
             })
         }
 
+        // check if an user is admin or not
+        app.get("/users/admin/:email", verifyToken, async (req, res) => {
+            const email = req.params.email;
+            if (email !== req.decoded.email) {
+                return res.status(403).send({ message: 'unauthorized access' })
+            }
+
+            const query = { email: email };
+            const user = await userCollection.findOne(query);
+            let isAdmin = false;
+            if (user) {
+                isAdmin = user.role === 'Admin'
+            }
+
+            res.send({ isAdmin })
+        })
+
         // get all the users
         app.get('/users', verifyToken, async (req, res) => {
             const cursor = userCollection.find();
