@@ -62,6 +62,17 @@ async function run() {
             })
         }
 
+        const verifyAdmin = async (req, res, next) => {
+            const email = req.decoded.email;
+            const query = { email: email };
+            const user = await userCollection.findOne(query);
+            let isAdmin = user?.role === 'Admin';
+            if (!isAdmin) {
+                return res.status(403).send({ message: 'forbidden access' })
+            }
+            next();
+        }
+
         // check if an user is admin or not
         app.get("/users/admin/:email", verifyToken, async (req, res) => {
             const email = req.params.email;
@@ -80,14 +91,14 @@ async function run() {
         })
 
         // get all the users
-        app.get('/users', verifyToken, async (req, res) => {
+        app.get('/users', verifyToken, verifyAdmin, async (req, res) => {
             const cursor = userCollection.find();
             const result = await cursor.toArray();
             res.send(result)
         })
 
         // user role
-        app.patch("/users/admin/:id", async (req, res) => {
+        app.patch("/users/admin/:id", verifyToken, verifyAdmin, async (req, res) => {
             const id = req.params.id;
             const filter = { _id: new ObjectId(id) };
             const updateDoc = {
@@ -100,7 +111,7 @@ async function run() {
             res.send(result);
         })
 
-        app.patch("/users/seller/:id", async (req, res) => {
+        app.patch("/users/seller/:id", verifyToken, verifyAdmin, async (req, res) => {
             const id = req.params.id;
             const filter = { _id: new ObjectId(id) };
             const updateDoc = {
@@ -113,7 +124,7 @@ async function run() {
             res.send(result);
         })
 
-        app.patch("/user/:id", async (req, res) => {
+        app.patch("/user/:id", verifyToken, verifyAdmin, async (req, res) => {
             const id = req.params.id;
             const filter = { _id: new ObjectId(id) };
             const updateDoc = {
