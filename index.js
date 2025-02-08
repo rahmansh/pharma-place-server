@@ -32,6 +32,7 @@ async function run() {
         const userCollection = client.db("PharmaPlace").collection("users");
         const medicineCollection = client.db("PharmaPlace").collection("medicines");
         const cartCollection = client.db("PharmaPlace").collection("carts");
+        const paymentCollection = client.db("PharmaPlace").collection("payments");
 
 
         // jwt related api
@@ -291,6 +292,25 @@ async function run() {
             res.send({
                 clientSecret: paymentIntent.client_secret,
             });
+        })
+
+        app.post("/payments", async (req, res) => {
+            const payement = req.body;
+            const paymentResult = await paymentCollection.insertOne(payement);
+
+            console.log("Payment info", payement);
+
+
+            const query = {
+                _id: {
+                    $in: payement.cartIds.map(id => new ObjectId(id))
+                }
+            }
+
+            const deleteResult = await cartCollection.deleteMany(query);
+
+            res.send({ paymentResult, deleteResult })
+
         })
 
 
