@@ -275,6 +275,15 @@ async function run() {
             }
         })
 
+        // get all the medicines added by user
+        app.get("/medicines/:email", async (req, res) => {
+            const email = req.params.email;
+            const query = { addedBy: req.params.email }
+
+            const result = await medicineCollection.find(query).toArray();
+            res.send(result)
+        })
+
 
         // payment
         app.get("/payments/:email", verifyToken, async (req, res) => {
@@ -288,6 +297,8 @@ async function run() {
             const result = await paymentCollection.find(query).toArray();
             res.send(result)
         })
+
+
 
 
 
