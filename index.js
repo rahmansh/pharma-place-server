@@ -175,10 +175,18 @@ async function run() {
             res.send(result);
         })
 
+
         // pharma place medicine details
         app.get("/medicines", async (req, res) => {
             const cursor = medicineCollection.find();
             const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        // post medicines
+        app.post("/medicines", async (req, res) => {
+            const medicine = req.body;
+            const result = await medicineCollection.insertOne(medicine);
             res.send(result);
         })
 
