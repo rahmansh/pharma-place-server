@@ -292,6 +292,11 @@ async function run() {
             res.send(result)
         })
 
+        // stats or analytics
+        app.get("/admin-stats", async (req, res) => {
+            console.log("Admin stats")
+        })
+
 
         // payment
         app.get("/payments/:email", verifyToken, async (req, res) => {
