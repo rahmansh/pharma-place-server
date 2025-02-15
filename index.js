@@ -293,7 +293,7 @@ async function run() {
         })
 
         // stats or analytics
-        app.get("/admin-stats", async (req, res) => {
+        app.get("/admin-stats", verifyToken, verifyAdmin, async (req, res) => {
             const users = await userCollection.estimatedDocumentCount();
             const medicines = await medicineCollection.estimatedDocumentCount();
             const orders = await paymentCollection.estimatedDocumentCount();
