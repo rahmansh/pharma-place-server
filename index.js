@@ -386,6 +386,14 @@ async function run() {
             res.send(result);
         })
 
+        // add category
+        app.post("/categories", async (req, res) => {
+            const category = req.body;
+            const result = await categoriesCollection.insertOne(category);
+            res.send(result);
+        })
+
+
 
 
 
