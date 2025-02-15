@@ -393,6 +393,24 @@ async function run() {
             res.send(result);
         })
 
+        // update category
+        app.put("/categories/:id", async (req, res) => {
+            const id = req.params.id;
+            console.log(id)
+            const updateDoc = req.body;
+            console.log(updateDoc)
+            const query = { _id: new ObjectId(id) }
+
+            const update = {
+                $set: updateDoc
+            }
+
+            const result = await categoriesCollection.updateOne(query, update);
+
+            res.send(result);
+
+        })
+
 
 
 
