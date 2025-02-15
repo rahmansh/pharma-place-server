@@ -323,6 +323,26 @@ async function run() {
 
         })
 
+        // get all the payments
+        app.get("/payments", verifyToken, verifyAdmin, async (req, res) => {
+            const result = await paymentCollection.find().toArray();
+            res.send(result)
+        })
+
+        // change payment status
+        app.patch("/payments/:id", verifyToken, verifyAdmin, async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const updateDoc = req.body;
+            const update = {
+                $set: updateDoc
+            }
+
+            const result = await paymentCollection.updateOne(query, update);
+            res.send(result)
+        })
+
+
 
         // payment
         app.get("/payments/:email", verifyToken, async (req, res) => {
