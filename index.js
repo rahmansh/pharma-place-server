@@ -439,6 +439,59 @@ async function run() {
             res.send(result);
         })
 
+        // get medicines by seller
+        app.get("/medicines-by-seller", verifyToken, async (req, res) => {
+            const { email, role } = req.query;
+            try {
+                const result = await paymentCollection.aggregate([
+                    {
+                        $unwind: "$medicineIds"
+                    },
+                    {
+                        $set: { medicineIds: { $toObjectId: "$medicineIds" } } // Convert medicineIds to ObjectId
+                    },
+                    {
+                        $lookup: {
+                            from: "medicines",
+                            localField: "medicineIds",
+                            foreignField: "_id",
+                            as: "medicineDetails"
+                        }
+                    },
+                    { $unwind: "$medicineDetails" },
+                    // {
+                    //     $match: { "medicineDetails.addedBy": email }
+                    // }
+                    {
+                        $lookup: {
+                            from: "users", // Lookup users collection
+                            localField: "medicineDetails.addedBy",
+                            foreignField: "email",
+                            as: "userDetails"
+                        }
+                    },
+                    { $unwind: "$userDetails" }, // Unwind userDetails array
+                    {
+                        $match: {
+                            "userDetails.email": email,  // Ensure email matches
+                            "userDetails.role": role     // Ensure role matches
+                        }
+                    }
+
+
+
+                ]).toArray()
+
+                res.send(result)
+
+            } catch (error) {
+                console.error("Error in aggregation: ", error)
+                res.status(500).send("Internal Server Error");
+            }
+        })
+
+
+
 
 
 
