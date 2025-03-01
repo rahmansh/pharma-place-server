@@ -33,6 +33,7 @@ async function run() {
         const medicineCollection = client.db("PharmaPlace").collection("medicines");
         const cartCollection = client.db("PharmaPlace").collection("carts");
         const paymentCollection = client.db("PharmaPlace").collection("payments");
+        const advertisements = client.db("PharmaPlace").collection("advertisements");
 
 
         // jwt related api
@@ -507,6 +508,33 @@ async function run() {
             const result = await paymentCollection.find().toArray();
             res.send(result)
         })
+
+
+        // for seller
+        app.get("/adversitement-status/:email", async (req, res) => {
+            const query = { addedBy: req.params.email }
+
+            const result = await medicineCollection.find(query).toArray();
+            res.send(result)
+        })
+
+        app.patch("/advertisement-request/:id", async (req, res) => {
+            const medicineId = req.params.id;
+            console.log(medicineId)
+
+            const result = await medicineCollection.updateOne(
+                { _id: new ObjectId(medicineId) },
+                {
+                    $set: {
+                        sliderStatus: 'requested'
+                    }
+                }
+            );
+
+            res.send(result);
+
+        })
+
 
 
 
