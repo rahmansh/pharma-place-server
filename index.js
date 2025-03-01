@@ -502,6 +502,13 @@ async function run() {
         })
 
 
+        // for admin
+        app.get("/sales-report", verifyToken, verifyAdmin, async (req, res) => {
+            const result = await paymentCollection.find().toArray();
+            res.send(result)
+        })
+
+
 
 
 
