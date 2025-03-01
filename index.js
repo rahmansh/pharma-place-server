@@ -152,6 +152,23 @@ async function run() {
 
 
 
+        // get all the slider that has add value
+        app.get("/medicines/slider", async (req, res) => {
+            try {
+                const result = await medicineCollection.aggregate([
+                    {
+                        $match: { sliderStatus: "add" }
+                    }
+                ]).toArray()
+
+                res.send(result)
+
+            } catch (error) {
+                console.error("Error getting slider: ", error);
+                res.status(500).send("Internal Server Error");
+            }
+        })
+
 
 
 
@@ -549,6 +566,11 @@ async function run() {
             res.send(result);
 
         })
+
+
+
+
+
 
 
 
