@@ -302,21 +302,32 @@ async function run() {
             const result = await paymentCollection.aggregate([
                 {
                     $group: {
-                        _id: null,
-                        totalRevenue: {
+                        _id: "$status",
+                        totalAmount: {
                             $sum: '$price'
                         }
                     }
                 }
             ]).toArray();
 
-            const revenue = result.length > 0 ? result[0].totalRevenue : 0;
+            let paidTotal = 0;
+            let pendingTotal = 0;
+
+            result?.forEach(item => {
+                if (item._id === 'paid') {
+                    paidTotal = item.totalAmount;
+                } else {
+                    pendingTotal = item.totalAmount;
+                }
+            }
+            )
 
             res.send({
                 users,
                 medicines,
                 orders,
-                revenue
+                paidTotal,
+                pendingTotal
 
             })
 
