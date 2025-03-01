@@ -518,7 +518,7 @@ async function run() {
             res.send(result)
         })
 
-        app.patch("/advertisement-request/:id", async (req, res) => {
+        app.patch("/advertisement-request/:id", verifyToken, async (req, res) => {
             const medicineId = req.params.id;
             console.log(medicineId)
 
