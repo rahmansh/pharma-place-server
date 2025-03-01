@@ -509,6 +509,21 @@ async function run() {
             res.send(result)
         })
 
+        app.patch("/advertisement-status/:id", verifyToken, async (req, res) => {
+            const status = req.body.status;
+            const id = req.params.id;
+            const result = await medicineCollection.updateOne(
+                { _id: new ObjectId(id) },
+                {
+                    $set: {
+                        sliderStatus: status
+                    }
+                }
+            );
+
+            res.send(result)
+        })
+
 
         // for seller
         app.get("/adversitement-status/:email", async (req, res) => {
