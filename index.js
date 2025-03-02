@@ -170,6 +170,35 @@ async function run() {
         })
 
 
+        // get all the discounted product
+        app.get("/medicines/discount", async (req, res) => {
+            try {
+                const result = await medicineCollection.aggregate([
+                    {
+                        $match: { discount: { $exists: true } }
+                    }
+                ]).toArray()
+
+                if (!result || result.length === 0) {
+                    return res.status(404).json({
+                        success: false,
+                        message: "No discounted medicines found.",
+                        data: []
+                    })
+                }
+
+                res.status(200).json({
+                    success: true,
+                    message: "Discounted medicines retrieved successfully.",
+                    data: result
+                })
+
+            } catch (error) {
+                res.status(500).json({ message: error.message })
+            }
+        })
+
+
 
 
         // insert user data for the first time
