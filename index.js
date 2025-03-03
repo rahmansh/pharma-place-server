@@ -627,6 +627,9 @@ async function run() {
 run().catch(console.dir);
 
 
+app.get('/', (req, res) => {
+    res.send('PharmaPlace APIs are Ready to Server')
+})
 
 
 app.listen(port, () => {
