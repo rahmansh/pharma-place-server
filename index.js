@@ -51,7 +51,7 @@ async function run() {
 
         // middlewares
         const verifyToken = (req, res, next) => {
-            console.log("Inside verify token: ", req.headers.authorization);
+            // console.log("Inside verify token: ", req.headers.authorization);
             if (!req.headers.authorization) {
                 return res.status(401).send({ message: 'forbidden access' })
             }
@@ -441,7 +441,7 @@ async function run() {
             const payement = req.body;
             const paymentResult = await paymentCollection.insertOne(payement);
 
-            console.log("Payment info", payement);
+            // console.log("Payment info", payement);
 
 
             const query = {
@@ -474,9 +474,9 @@ async function run() {
         // update category
         app.put("/categories/:id", async (req, res) => {
             const id = req.params.id;
-            console.log(id)
+            // console.log(id)
             const updateDoc = req.body;
-            console.log(updateDoc)
+            // console.log(updateDoc)
             const query = { _id: new ObjectId(id) }
 
             const update = {
@@ -581,7 +581,7 @@ async function run() {
 
         app.patch("/advertisement-request/:id", verifyToken, async (req, res) => {
             const medicineId = req.params.id;
-            console.log(medicineId)
+            // console.log(medicineId)
 
             const result = await medicineCollection.updateOne(
                 { _id: new ObjectId(medicineId) },
