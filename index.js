@@ -628,7 +628,7 @@ run().catch(console.dir);
 
 
 app.get('/', (req, res) => {
-    res.send('PharmaPlace APIs are Ready to Server')
+    res.send('PharmaPlace APIs are Ready to Serve')
 })
 
 
